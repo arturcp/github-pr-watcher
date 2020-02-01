@@ -1,7 +1,9 @@
 class PullRequestsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
     if authors.present?
-      render json: client.open_pull_requests(authors)
+      render json: client.open_pull_requests
     else
       head :unprocessable_entity
     end
@@ -10,10 +12,18 @@ class PullRequestsController < ApplicationController
   private
 
   def client
-    @client ||= Github::Client.new
+    @client ||= Github::Client.new(authors, organization, token)
   end
 
   def authors
     params[:authors] || []
+  end
+
+  def organization
+    params[:organization].to_s
+  end
+
+  def token
+    params[:token] || []
   end
 end

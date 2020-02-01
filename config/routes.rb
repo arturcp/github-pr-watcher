@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :pull_requests, only: :index
+  post '/pull_requests', to: 'pull_requests#index', as: 'pull_requests'
 end
