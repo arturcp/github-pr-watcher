@@ -1,7 +1,6 @@
 module Github
   class Client
     API = 'https://api.github.com'
-    AUTHORS = %w[arturcp betocattani caduaraujo felipecvo joaoscheuermann].freeze
 
     attr_reader :authors, :organization, :token
 
