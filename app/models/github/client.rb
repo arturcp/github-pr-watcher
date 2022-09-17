@@ -25,7 +25,6 @@ module Github
     def connection
       @connection ||= Faraday.new(url: API) do |builder|
         builder.response :logger, Rails.logger, bodies: true
-        builder.response :logger, ::Logger.new('log/github_client.log'), bodies: true unless Rails.env.test?
         builder.use :instrumentation
         builder.adapter(*Faraday.default_adapter)
       end
