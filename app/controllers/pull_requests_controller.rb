@@ -10,7 +10,7 @@ class PullRequestsController < ApplicationController
   private
 
   def client
-    @client ||= Github::Client.new(authors, organization, token)
+    @client ||= Github::GraphqlClient.new(authors, organization, token)
   end
 
   def authors
