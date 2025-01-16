@@ -61,6 +61,8 @@ module Github
         }
       GRAPHQL
 
+      puts "Query: #{query}"
+
       response = connection.post do |req|
         req.body = JSON.generate({ query: query })
       end
@@ -101,7 +103,7 @@ module Github
     end
 
     def organization_query
-      return '' unless @organization
+      return '' if @organization.empty?
 
       "org:#{@organization}"
     end

@@ -18,7 +18,9 @@ This API exposes an endpoint to fetch pull requests from a GitHub repository. Th
 }
 ```
 
-The token needs to have the `repo` scope to be able to fetch the pull requests. The `organization` parameter is optional and can be used to filter the pull requests by organization, leave it blank if you want to see all pull requests.
+The token needs to have the `repo` and `read:org` scopes to be able to fetch the pull requests. You can [create your tokens here](https://github.com/settings/tokens).
+
+The `organization` parameter is optional and can be used to filter the pull requests by organization, leave it blank if you want to see all pull requests.
 
 # Resources
 
