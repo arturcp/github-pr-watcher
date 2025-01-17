@@ -1,9 +1,9 @@
-require 'faraday'
-require 'json'
+require "faraday"
+require "json"
 
 module Github
   class GraphqlClient
-    URL = 'https://api.github.com/graphql'
+    URL = "https://api.github.com/graphql"
 
     attr_reader :authors, :organization, :token
 
@@ -69,16 +69,16 @@ module Github
 
       data = JSON.parse(response.body)
 
-      if data['data']
-        search_result = data['data']['search']
-        issue_count = search_result['issueCount']
-        edges = search_result['edges']
+      if data["data"]
+        search_result = data["data"]["search"]
+        issue_count = search_result["issueCount"]
+        edges = search_result["edges"]
 
         edges.map do |edge|
-          PullRequest.from_graphql_node(edge['node'])
+          PullRequest.from_graphql_node(edge["node"])
         end
       else
-        errors = data['errors']
+        errors = data["errors"]
         errors.each do |error|
           puts "Error: #{error['message']}"
         end
@@ -89,21 +89,21 @@ module Github
 
     def authors_query
       @authors
-        .split(',')
+        .split(",")
         .map { |author| "author:#{author.strip}" }
-        .join(' ')
+        .join(" ")
     end
 
     def connection
       @connection ||= Faraday.new(url: URL) do |faraday|
         faraday.authorization :Bearer, token
-        faraday.headers['Content-Type'] = 'application/json'
+        faraday.headers["Content-Type"] = "application/json"
         faraday.adapter Faraday.default_adapter
       end
     end
 
     def organization_query
-      return '' if @organization.empty?
+      return "" if @organization.empty?
 
       "org:#{@organization}"
     end
