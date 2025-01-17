@@ -1,5 +1,6 @@
 module Github
-  class Client
+  # Deprecated in favor of Graphql Client
+  class RestClient
     API = 'https://api.github.com'
 
     attr_reader :authors, :organization, :token
