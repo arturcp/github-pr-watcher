@@ -17,18 +17,18 @@ class PullRequest
 
   def self.from_graphql_node(node)
     new(
-      author: node.dig('author', 'login'),
-      number: node['number'],
-      title: node['title'],
-      repository: node.dig('repository', 'nameWithOwner'),
-      reviews: node.dig('reviews', 'totalCount'),
-      reviewers: node.dig('reviewRequests', 'edges').map do |edge|
-        edge.dig('node', 'requestedReviewer', 'login') ||
-          edge.dig('node', 'requestedReviewer', 'name')
+      author: node.dig("author", "login"),
+      number: node["number"],
+      title: node["title"],
+      repository: node.dig("repository", "nameWithOwner"),
+      reviews: node.dig("reviews", "totalCount"),
+      reviewers: node.dig("reviewRequests", "edges").map do |edge|
+        edge.dig("node", "requestedReviewer", "login") ||
+          edge.dig("node", "requestedReviewer", "name")
       end,
-      created_at: node['createdAt'],
-      merged_at: node['mergedAt'],
-      url: node['url']
+      created_at: node["createdAt"],
+      merged_at: node["mergedAt"],
+      url: node["url"]
     )
   end
 end
