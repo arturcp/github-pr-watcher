@@ -4,7 +4,7 @@ This API was designed to be used with the [GitHub PR Watcher](https://github.com
 
 # Requirements
 
-This project runs on ruby 3.2.2 and was tested using Rails 7.0.5
+This project runs on ruby 3.4.1 and Rails 8.0.1
 
 # How to use
 
