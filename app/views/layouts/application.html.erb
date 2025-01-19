@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Github Pr Watcher" %></title>
+    <title><%= content_for(:title) || "Github PR Watcher" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -20,11 +20,12 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap"', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="m-0 p-0 h-full bg-slate-50">
+    <main class="container px-4 ">
       <%= yield %>
     </main>
   </body>

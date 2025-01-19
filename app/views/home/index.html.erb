@@ -1,3 +1,20 @@
-<div class="text-3xl font-bold underline text-red-500 bg-orange-400">
-    Hello world!
+<div data-controller="modal">
+  <div class="grid grid-cols-2 h-screen mt-4 border-b">
+    <div class="w-80 border-r-2 px-4">
+      <h2 class="font-['Black_Ops_One'] text-4xl">PR Watcher</h2>
+      <div class="flex flex-col mt-8 h-full">
+        <div class="py-2 cursor-pointer hover:bg-zinc-100">The RealReal</div>
+        <div class="py-2 cursor-pointer hover:bg-zinc-100">Enigma</div>
+        <div class="py-2 cursor-pointer hover:bg-zinc-100">Colab-dev</div>
+        <div class="pt-4">
+          <div class="bg-slate-900 text-white py-2 text-center cursor-pointer" data-action="click->modal#open">
+            Add new group
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>Right panel</div>
+  </div>
+
+  <%= render "modal" %>
 </div>
