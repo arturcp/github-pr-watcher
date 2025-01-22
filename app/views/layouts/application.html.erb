@@ -26,7 +26,26 @@
 
   <body class="m-0 p-0 h-full bg-slate-50">
     <main class="container px-4 ">
-      <%= yield %>
+      <div data-controller="modal local-storage">
+        <div class="grid grid-cols-2 h-screen mt-4 border-b">
+          <div class="w-80 border-r-2 px-4">
+            <h2 class="font-['Black_Ops_One'] text-4xl">PR Watcher</h2>
+            <div class="flex flex-col mt-8 h-full" data-controller="menu">
+              <div class="pb-4">
+                <div class="bg-slate-900 text-white py-2 text-center cursor-pointer" data-action="click->modal#open">
+                  Add new group
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <%= yield %>
+          </div>
+        </div>
+
+        <%= render "shared/modal" %>
+      </div>
     </main>
   </body>
 </html>
