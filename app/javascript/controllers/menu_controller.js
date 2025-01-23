@@ -1,14 +1,11 @@
 import { Controller } from "@hotwired/stimulus";
+import Config from "models/config";
 
 export default class extends Controller {
   connect() {
-    // console.log(this.element);
-
-    let config = localStorage.getItem("config");
+    const config = new Config().current();
 
     if (config) {
-      config = JSON.parse(config);
-      console.log(config);
       this.load(config);
     }
   }
@@ -18,7 +15,7 @@ export default class extends Controller {
       const menuItem = document.createElement("a");
       menuItem.classList.add("py-2", "cursor-pointer", "hover:bg-zinc-100");
       menuItem.innerText = config[key].name;
-      menuItem.setAttribute("href", `/${config[key].slug}`);
+      menuItem.setAttribute("href", `/${key}`);
       this.element.appendChild(menuItem);
     });
   }
