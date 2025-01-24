@@ -1,11 +1,18 @@
 <div data-controller="pull-requests">
-  <h1 class="text-3xl w-full text-center mt-1 underline" data-pull-requests-target="title"></h1>
-  <div class="flex justify-center w-full mt-3 space-x-2" data-controller="group">
-    <div class="cursor-pointer" data-action="click->group#delete" data-slug="<%= @slug %>">
-      <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/trash.png" alt="Trash" />
+  <div class="flex items-center justify-between w-full p-4 bg-gray-100 rounded-lg">
+    <div class="flex-1 text-center">
+      <h1 class="text-3xl w-full text-center mt-1" data-pull-requests-target="title"></h1>
     </div>
-    <div class="cursor-pointer" data-action="click->modal#open click->form#load" data-slug="<%= @slug %>">
-      <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/settings.png" alt="Settings" />
+
+    <div class="ml-auto">
+      <div class="flex justify-center w-full mt-3 space-x-2" data-controller="group">
+        <div class="cursor-pointer" data-action="click->group#delete" data-slug="<%= @slug %>">
+          <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/trash.png" alt="Trash" />
+        </div>
+        <div class="cursor-pointer" data-action="click->modal#open click->form#load" data-slug="<%= @slug %>">
+          <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/settings.png" alt="Settings" />
+        </div>
+      </div>
     </div>
   </div>
 </div>
