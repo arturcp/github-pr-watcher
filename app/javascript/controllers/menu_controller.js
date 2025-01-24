@@ -25,9 +25,16 @@ export default class extends Controller {
       menuItem.remove();
     });
 
+    const url = new URL(window.location.href);
+    const slug = url.pathname.split("/").pop();
+
     Object.keys(config).forEach((key) => {
       const menuItem = document.createElement("a");
       menuItem.classList.add("py-2", "cursor-pointer", "hover:bg-zinc-100");
+      if (slug === key) {
+        menuItem.classList.add("border-b");
+      }
+
       menuItem.innerText = config[key].name;
       menuItem.setAttribute("href", `/${key}`);
       this.element.appendChild(menuItem);
