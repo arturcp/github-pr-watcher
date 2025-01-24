@@ -3,7 +3,17 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static targets = ["modal"];
 
-  connect() {}
+  connect() {
+    this.element.addEventListener("form:saved", this.handleClose.bind(this));
+  }
+
+  disconnect() {
+    this.element.removeEventListener("form:saved", this.handleClose.bind(this));
+  }
+
+  handleClose(event) {
+    this.close();
+  }
 
   open() {
     this.modalTarget.classList.remove("hidden");

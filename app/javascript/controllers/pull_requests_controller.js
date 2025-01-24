@@ -2,8 +2,9 @@ import { Controller } from "@hotwired/stimulus";
 import Config from "models/config";
 
 export default class extends Controller {
+  static targets = ["title"];
+
   connect() {
-    console.log("Hello, Stimulus!", this.element);
     const url = new URL(window.location.href);
     const slug = url.pathname.split("/").pop();
     const config = new Config();
@@ -14,25 +15,27 @@ export default class extends Controller {
       return;
     }
 
-    fetch("/pull_requests", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        authors: groupConfig.authors,
-        organization: groupConfig.organization,
-        token: groupConfig.token,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Handle the response data
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching pull requests:", error);
-      });
+    this.titleTarget.innerHTML = groupConfig.name;
+
+    // fetch("/pull_requests", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     authors: groupConfig.authors,
+    //     organization: groupConfig.organization,
+    //     token: groupConfig.token,
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     // Handle the response data
+    //     console.log(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching pull requests:", error);
+    //   });
 
     // Render pull requests
     // extra:
