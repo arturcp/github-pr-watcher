@@ -61,8 +61,6 @@ module Github
         }
       GRAPHQL
 
-      puts "Query: #{query}"
-
       response = connection.post do |req|
         req.body = JSON.generate({ query: query })
       end
