@@ -1,7 +1,7 @@
 <div data-controller="pull-requests">
   <h1 class="text-3xl w-full text-center mt-1 underline" data-pull-requests-target="title"></h1>
-  <div class="flex justify-center w-full mt-3 space-x-2">
-    <div class="cursor-pointer">
+  <div class="flex justify-center w-full mt-3 space-x-2" data-controller="group">
+    <div class="cursor-pointer" data-action="click->group#delete" data-slug="<%= @slug %>">
       <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/trash.png" alt="Trash" />
     </div>
     <div class="cursor-pointer" data-action="click->modal#open click->form#load" data-slug="<%= @slug %>">

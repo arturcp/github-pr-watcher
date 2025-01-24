@@ -3,16 +3,16 @@ import Config from "models/config";
 
 export default class extends Controller {
   connect() {
-    this.element.addEventListener("form:saved", this.load.bind(this));
+    window.addEventListener("group-config:changed", this.load.bind(this));
 
     this.load();
   }
 
   disconnect() {
-    this.element.removeEventListener("form:saved", this.load.bind(this));
+    window.removeEventListener("group-config:changed", this.load.bind(this));
   }
 
-  load(event) {
+  load() {
     const config = new Config().current();
 
     if (config) {
@@ -21,6 +21,10 @@ export default class extends Controller {
   }
 
   show(config) {
+    this.element.querySelectorAll("a").forEach((menuItem) => {
+      menuItem.remove();
+    });
+
     Object.keys(config).forEach((key) => {
       const menuItem = document.createElement("a");
       menuItem.classList.add("py-2", "cursor-pointer", "hover:bg-zinc-100");

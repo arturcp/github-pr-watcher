@@ -1,35 +1,22 @@
 export default class Config {
   constructor() {
+    this.data = this.current();
+  }
+
+  current() {
     const config = localStorage.getItem("config");
     this.data = {};
 
     if (config) {
       this.data = JSON.parse(config);
     }
-    // else {
-    //   // temporary to help me debug
-    //   const dataToSave = {
-    //     "the-realreal": {
-    //       name: "The RealReal",
-    //       organization: "",
-    //       authors: "",
-    //       token: "",
-    //     },
-    //     enigma: {
-    //       name: "Enigma",
-    //       organization: "enigma-Co",
-    //       authors: "arturcp",
-    //       token: "",
-    //     },
-    //   };
 
-    //   localStorage.setItem("config", JSON.stringify(dataToSave));
-    //   this.data = dataToSave;
-    // }
+    return this.data;
   }
 
-  current() {
-    return this.data;
+  delete(slug) {
+    delete this.data[slug];
+    localStorage.setItem("config", JSON.stringify(this.data));
   }
 
   getConfig(slug) {

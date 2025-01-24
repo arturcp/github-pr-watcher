@@ -11,38 +11,71 @@
     <p class="mb-4">
       Setup configuration for the pull requests you want to watch
     </p>
-    <div class="mb-4">
-      <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
-        data-form-target="name"
-        data-action="input->form#slugify"
-      >
-      <div data-form-target="slug" class="text-sm text-right font-bold w-full pr-2 h-2"></div>
+
+    <div class="grid grid-flow-row grid-cols-2 gap-4">
+      <div class="">
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
+              data-form-target="name"
+              data-action="input->form#slugify"
+            >
+            <div data-form-target="slug" class="text-sm text-right font-bold w-full pr-2 h-2"></div>
+          </div>
+          <div class="mb-4">
+            <label for="organization" class="block text-sm font-medium text-gray-700">Organization (optional)</label>
+            <input
+              type="text"
+              id="organization"
+              name="organization"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
+              data-form-target="organization"
+            >
+          </div>
+          <div class="mb-4">
+            <label for="token" class="block text-sm font-medium text-gray-700">Token</label>
+            <input
+              type="text"
+              id="token"
+              name="token"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
+              data-form-target="token"
+            >
+          </div>
+
+      </div>
+      <div class="">
+        <div class="mb-4">
+          <label for="users" class="block text-sm font-medium text-gray-700">User to follow</label>
+          <div class="flex">
+            <input
+              type="text"
+              id="user"
+              name="user"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 h-[38px] rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
+              data-form-target="user"
+              data-action="keydown.enter->form#addUser"
+            >
+            <button
+              class="bg-slate-700 border text-white px-4 rounded ml-1 h-[38px] mt-1"
+              data-action="click->form#addUser">
+              +
+            </button>
+          </div>
+          <ul data-form-target="users" class="max-h-40 overflow-auto pl-2"></ul>
+
+        </div>
+      </div>
     </div>
-    <div class="mb-4">
-      <label for="organization" class="block text-sm font-medium text-gray-700">Organization (optional)</label>
-      <input
-        type="text"
-        id="organization"
-        name="organization"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
-        data-form-target="organization"
-      >
-    </div>
-    <div class="mb-4">
-      <label for="token" class="block text-sm font-medium text-gray-700">Token</label>
-      <input
-        type="text"
-        id="token"
-        name="token"
-        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
-        data-form-target="token"
-      >
-    </div>
+
+    <hr />
+
+    <br />
+
     <button
       class="bg-white border text-slate-900 px-4 py-2 rounded hover:bg-slate-700 hover:text-white"
       data-action="click->modal#close">
