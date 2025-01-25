@@ -79,7 +79,7 @@ module Github
         errors = data["errors"]
         errors.each do |error|
           puts "Error: #{error['message']}"
-        end
+        end if errors
       end
     end
 

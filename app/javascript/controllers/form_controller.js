@@ -10,7 +10,7 @@ export default class extends Controller {
     "slug",
     "token",
     "user",
-    "users",
+    "authors",
   ];
 
   connect() {
@@ -28,16 +28,16 @@ export default class extends Controller {
       this.nameTarget.disabled = true;
       this.organizationTarget.value = currentConfig.organization;
       this.tokenTarget.value = currentConfig.token;
-      this.users = currentConfig.users || [];
+      this.authors = currentConfig.authors || [];
     } else {
       this.nameTarget.value = "";
       this.nameTarget.disabled = false;
       this.organizationTarget.value = "";
       this.tokenTarget.value = "";
-      this.users = [];
+      this.authors = [];
     }
 
-    this.renderUsers();
+    this.renderAuthors();
   }
 
   slugify() {
@@ -60,22 +60,22 @@ export default class extends Controller {
   }
 
   addUser() {
-    if (!this.users) {
-      this.users = [];
+    if (!this.authors) {
+      this.authors = [];
     }
 
     const user = this.userTarget.value.trim();
-    if (user && user !== "" && !this.users.includes(user)) {
-      this.users.push(user.trim());
+    if (user && user !== "" && !this.authors.includes(user)) {
+      this.authors.push(user.trim());
       this.userTarget.value = "";
-      this.renderUsers();
+      this.renderAuthors();
     }
     this.userTarget.focus();
   }
 
-  renderUsers() {
-    this.usersTarget.innerHTML = "";
-    this.users.forEach((user, index) => {
+  renderAuthors() {
+    this.authorsTarget.innerHTML = "";
+    this.authors.forEach((user, index) => {
       const menuItem = document.createElement("li");
       menuItem.classList.add(
         "py-1",
@@ -94,12 +94,12 @@ export default class extends Controller {
       trashIcon.innerHTML = "🗑️";
       trashIcon.classList.add("cursor-pointer", "ml-2");
       trashIcon.addEventListener("click", () => {
-        this.users.splice(index, 1);
-        this.renderUsers();
+        this.authors.splice(index, 1);
+        this.renderAuthors();
       });
       menuItem.appendChild(trashIcon);
 
-      this.usersTarget.appendChild(menuItem);
+      this.authorsTarget.appendChild(menuItem);
     });
   }
 
@@ -108,7 +108,7 @@ export default class extends Controller {
       name: this.nameTarget.value,
       organization: this.organizationTarget.value,
       token: this.tokenTarget.value,
-      users: this.users,
+      authors: this.authors,
     });
 
     const event = new CustomEvent("group-config:changed", { bubbles: true });

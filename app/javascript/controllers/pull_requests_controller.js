@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import Config from "models/config";
 
 export default class extends Controller {
-  static targets = ["title"];
+  static targets = ["emptyState", "title"];
 
   connect() {
     const url = new URL(window.location.href);
@@ -11,35 +11,54 @@ export default class extends Controller {
     const groupConfig = config.getConfig(slug);
 
     if (!groupConfig) {
+      this.showEmptyState();
       console.error(`No config found for slug: ${slug}`);
       return;
     }
 
     this.titleTarget.innerHTML = groupConfig.name;
 
-    // fetch("/pull_requests", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     authors: groupConfig.authors,
-    //     organization: groupConfig.organization,
-    //     token: groupConfig.token,
-    //   }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     // Handle the response data
-    //     console.log(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching pull requests:", error);
-    //   });
+    fetch("/pull_requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        authors: groupConfig.authors.join(","),
+        organization: groupConfig.organization,
+        token: groupConfig.token,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.hideEmptyState();
+        console.log(data);
+        const insufficientScope =
+          data && data.length > 0 && data[0].type === "INSUFFICIENT_SCOPES";
 
-    // Render pull requests
-    // extra:
-    // Consider using storage instead of localStorage
-    // https://stackoverflow.com/questions/24279495/window-localstorage-vs-chrome-storage-local
+        if (insufficientScope) {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid token",
+            text: data[0].message,
+          });
+        } else if (!data) {
+          this.showEmptyState();
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching pull requests:", error);
+      });
+  }
+
+  insuficientScope(data) {}
+
+  showEmptyState() {
+    this.emptyStateTarget.classList.remove("hidden");
+  }
+
+  hideEmptyState() {
+    this.emptyStateTarget.classList.add("hidden");
   }
 }
