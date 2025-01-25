@@ -24,10 +24,10 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 p-0 h-full bg-slate-50">
-    <main class="px-4 ">
+  <body class="m-0 p-0 h-screen bg-slate-50 flex flex-col">
+    <main class="px-4 flex-grow overflow-auto">
       <div data-controller="modal form">
-        <div class="flex h-screen mt-4 border-b">
+        <div class="flex h-full mt-4 border-b">
           <div class="w-96 border-r-2 px-4 pr-8">
             <h2 class="font-['Black_Ops_One'] text-4xl">
               <a href="/">
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-          <div class="ml-8 w-full">
+          <div class="ml-8 w-full overflow-auto h-[calc(100vh-64px)]">
             <%= yield %>
           </div>
         </div>
@@ -51,6 +51,10 @@
         <%= render "shared/modal" %>
       </div>
     </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4">
+      <p>&copy; <%= Time.now.year %> Github PR Watcher. All rights reserved.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
