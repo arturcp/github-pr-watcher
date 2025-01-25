@@ -1,5 +1,5 @@
 <div data-controller="pull-requests">
-  <div class="flex items-center justify-between w-full p-4 bg-gray-100 rounded-lg">
+  <div class="flex items-center justify-between w-full p-4 bg-gray-100 rounded-lg" data-pull-requests-target="header">
     <div class="flex-1 text-center">
       <h1 class="text-3xl w-full text-center mt-1" data-pull-requests-target="title"></h1>
     </div>
@@ -25,11 +25,45 @@
       There are no pull requests that match the criteria of this group yet. Once you start following users and they create pull requests, they will appear here.
     </p>
     <p class="text-gray-700 mb-4">
-      If you think this is an error, check if this group's configuration is correct, with a valid token. Remember that to token must have the <strong>repo</strong> and <strong>read:org</strong> permissions, and if you are filtering by organization, you need to authorize the token on the organization before continuing.
+      If you think this is an error, check if this group's configuration is correct, with a valid token. Remember that the token must have the <strong>repo</strong> and <strong>read:org</strong> permissions, and if you are filtering by organization, you need to authorize the token on the organization before continuing.
     </p>
   </div>
 
-  <div class="p-6 bg-gray-50 rounded-lg mx-auto w-full" data-pull-requests-target="prList">
+  <section class="bg-gray-50 p-6 rounded-lg shadow-md border mt-8 border-gray-200" data-pull-requests-target="filters">
+    <div class="flex flex-col sm:flex-row gap-4">
+      <!-- Filter by State -->
+      <div class="w-full sm:w-1/2">
+        <label for="state-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by State</label>
+        <select
+          id="state-filter"
+          class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          data-pull-requests-target="stateFilter"
+          data-action="change->pull-requests#reloadList"
+        >
+          <option value="all" selected>All</option>
+          <option value="reviewed">Reviewed</option>
+          <option value="not-reviewed">Not Reviewed</option>
+        </select>
+      </div>
+
+      <!-- Filter by Reviewer -->
+      <div class="w-full sm:w-1/2">
+        <label for="reviewer-filter" class="block text-sm font-medium text-gray-700 mb-1">Filter by My Review</label>
+        <select
+          id="reviewer-filter"
+          class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          data-pull-requests-target="reviewFilter"
+          data-action="change->pull-requests#reloadList"
+        >
+          <option value="all" selected>All PRs</option>
+          <option value="my-review">Only PRs Requiring My Review</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="py-6 bg-gray-50 rounded-lg mx-auto w-full" data-pull-requests-target="prList">
     <ul id="pr-list" class="space-y-4">
       <!-- The list items will be dynamically populated here -->
     </ul>

@@ -2,7 +2,15 @@ import { Controller } from "@hotwired/stimulus";
 import Config from "models/config";
 
 export default class extends Controller {
-  static targets = ["emptyState", "prList", "title"];
+  static targets = [
+    "emptyState",
+    "filters",
+    "header",
+    "prList",
+    "reviewFilter",
+    "stateFilter",
+    "title",
+  ];
 
   connect() {
     const url = new URL(window.location.href);
@@ -40,7 +48,15 @@ export default class extends Controller {
         token: this.groupConfig.token,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status === 422) {
+            throw new Error("Unprocessable Entity");
+          }
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
         this.hideEmptyState();
 
@@ -60,20 +76,38 @@ export default class extends Controller {
         }
       })
       .catch((error) => {
-        console.error("Error fetching pull requests:", error);
+        if (error.message === "Unprocessable Entity") {
+          Swal.fire({
+            icon: "error",
+            title: "Unauthorized",
+            html: `<div class="text-left text-sm">Check the group's configuration, it seems your token is either invalid or does not have enough scope. <br /> <br /> <div> Remember that the token must have the <strong>repo</strong> and <strong>read:org</strong> permissions, and if you are filtering by organization, you need to authorize the token on the organization before continuing. </div> </div>`,
+          });
+        } else {
+          console.error("Error fetching pull requests:", error);
+          this.buildPRList([]);
+        }
       });
   }
 
   showEmptyState() {
     this.emptyStateTarget.classList.remove("hidden");
+    this.filtersTarget.classList.add("hidden");
+    this.headerTarget.classList.add("hidden");
   }
 
   buildPRList(pullRequests) {
     this.prListTarget.innerHTML = "";
 
+    const filteredPRs = this.applyFilters(pullRequests);
+
+    if (filteredPRs.length === 0) {
+      this.prListTarget.innerHTML = `<p class="text-gray-500">No pull requests match the selected filters.</p>`;
+      return;
+    }
+
     const currentUrls = new Set();
 
-    pullRequests.forEach((pr) => {
+    filteredPRs.forEach((pr) => {
       const isChecked = this.groupConfig.reviewed?.includes(pr.url) || false;
       const { elapsedTime, colorClass } = this.calculateTimeElapsed(
         pr.created_at
@@ -86,7 +120,7 @@ export default class extends Controller {
       }`;
 
       listItem.innerHTML = `
-        <input type="checkbox" class="w-5 h-5 rounded focus:ring-2 focus:ring-blue-300 accent-slate-900"
+        <input type="checkbox" class="w-5 h-5 rounded focus:ring-2 focus:ring-indigo-300 accent-slate-900"
                  data-action="change->pull-requests#togglePullRequest"
                  data-url="${pr.url}"
                  ${isChecked ? "checked" : ""} />
@@ -106,6 +140,28 @@ export default class extends Controller {
 
     // Cleanup: Remove URLs from groupConfig.reviewed that are no longer in the list of PRs
     this.cleanupGroupConfig(currentUrls);
+  }
+
+  applyFilters(pullRequests) {
+    const reviewFilter = this.reviewFilterTarget.value;
+    const stateFilter = this.stateFilterTarget.value;
+    const currentUser = "arturcp";
+
+    return pullRequests.filter((pr) => {
+      const isReviewed = this.groupConfig.reviewed?.includes(pr.url);
+      const requiresMyReview = pr.reviewers.includes(currentUser);
+
+      const stateMatches =
+        stateFilter === "all" ||
+        (stateFilter === "reviewed" && isReviewed) ||
+        (stateFilter === "not-reviewed" && !isReviewed);
+
+      const reviewMatches =
+        reviewFilter === "all" ||
+        (reviewFilter === "my-review" && requiresMyReview);
+
+      return stateMatches && reviewMatches;
+    });
   }
 
   cleanupGroupConfig(currentUrls) {
@@ -160,5 +216,9 @@ export default class extends Controller {
     }
 
     return { elapsedTime, colorClass };
+  }
+
+  reloadList() {
+    this.list();
   }
 }
