@@ -104,7 +104,9 @@ export default class extends Controller {
   }
 
   save() {
+    const currentConfig = this.config.getConfig(this.slug) || {};
     this.config.save(this.slug, {
+      ...currentConfig,
       name: this.nameTarget.value,
       organization: this.organizationTarget.value,
       token: this.tokenTarget.value,
