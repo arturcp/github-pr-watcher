@@ -29,12 +29,14 @@ export default class extends Controller {
       this.organizationTarget.value = currentConfig.organization;
       this.tokenTarget.value = currentConfig.token;
       this.authors = currentConfig.authors || [];
+      this.slugTarget.innerHTML = this.slug;
     } else {
       this.nameTarget.value = "";
       this.nameTarget.disabled = false;
       this.organizationTarget.value = "";
       this.tokenTarget.value = "";
       this.authors = [];
+      this.slugTarget.innerHTML = "";
     }
 
     this.renderAuthors();
