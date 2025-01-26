@@ -9,6 +9,13 @@
         <div class="cursor-pointer hover:animate-spin" data-action="click->pull-requests#list" data-slug="<%= @slug %>">
           <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/refresh.png" alt="Refresh" />
         </div>
+
+
+        <div class="cursor-pointer">
+          <a href="/<%= @slug %>/favorites" alt="Favorites">
+            <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/heart.png" alt="Trash" />
+          </a>
+        </div>
         <div class="cursor-pointer" data-action="click->group#delete" data-slug="<%= @slug %>">
           <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/trash.png" alt="Trash" />
         </div>
@@ -63,7 +70,7 @@
   </section>
 
 
-  <div class="py-6 bg-gray-50 rounded-lg mx-auto w-full" data-pull-requests-target="prList">
+  <div class="py-6 bg-gray-50 rounded-lg mx-auto w-full" data-pull-requests-target="prList" data-controller="favorites">
     <ul id="pr-list" class="space-y-4">
       <!-- The list items will be dynamically populated here -->
     </ul>

@@ -13,5 +13,6 @@ Rails.application.routes.draw do
   root "home#index"
 
   get "/:slug", to: "pr_groups#show", as: "show"
+  get "/:slug/favorites", to: "favorites#index", as: "favorites"
   post "/pull_requests", to: "pull_requests#index", as: "pull_requests"
 end
