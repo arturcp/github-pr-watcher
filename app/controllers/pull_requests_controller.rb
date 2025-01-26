@@ -2,7 +2,6 @@ class PullRequestsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    puts params
     if authors.present?
       render json: client.open_pull_requests
     else

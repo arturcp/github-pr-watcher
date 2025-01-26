@@ -8,7 +8,6 @@ export default class extends Controller {
     const autoRefresh = localStorage.getItem("autoRefresh") === "true";
     this.toggleSwitchTarget.checked = autoRefresh;
 
-    // If auto-refresh is enabled, start the interval
     if (autoRefresh) {
       this.startAutoRefresh();
     }
