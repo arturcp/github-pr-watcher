@@ -13,7 +13,7 @@
     </p>
 
     <div class="grid grid-flow-row grid-cols-2 gap-4">
-      <div class="">
+      <div>
         <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
             <input
@@ -36,7 +36,7 @@
               data-form-target="organization"
             >
           </div>
-          <div class="mb-4">
+          <div class="mb-4 relative">
             <label for="token" class="block text-sm font-medium text-gray-700">Token</label>
             <input
               type="text"
@@ -45,8 +45,21 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-sm"
               data-form-target="token"
             >
-            <div class="text-xs">
-              Create the token <a class="underline text-blue-800" target="_blank" href="https://github.com/settings/tokens">here<a> and check <strong>repo</strong> and <strong>read:org</strong> permissions
+            <button
+              class="absolute right-1 top-7 text-slate-900 bg-white px-3 py-1 rounded hover:bg-slate-500 hover:text-white"
+              data-action="click->form#showGroupsList"
+              data-form-target="groupsButton">
+              <img class="w-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/clipboard.png" alt="Copy token from other group" />
+            </button>
+            <!-- Dropdown List -->
+            <div
+              class="absolute right-0 top-18 mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden"
+              data-form-target="groupsList"
+            >
+              <ul class="max-h-40 overflow-auto"></ul>
+            </div>
+            <div class="text-xs mt-2">
+              Create the token <a class="underline text-blue-800" target="_blank" href="https://github.com/settings/tokens">here<a> with <strong>repo</strong> and <strong>read:org</strong> permissions, or click on the clioboard icon above and copy the token from another group.
             </div>
           </div>
       </div>
