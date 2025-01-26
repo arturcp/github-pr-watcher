@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["githubHandleInput", "toggleSwitch"];
-  static AUTO_REFRESH_INTERVAL = 300000;
+  static AUTO_REFRESH_INTERVAL = 1200000;
 
   connect() {
     const autoRefresh = localStorage.getItem("autoRefresh") === "true";
