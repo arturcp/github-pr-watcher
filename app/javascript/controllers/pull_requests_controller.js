@@ -28,6 +28,8 @@ export default class extends Controller {
 
     this.groupConfig = groupConfig;
 
+    this.loadFilters();
+
     this.list();
   }
 
@@ -36,7 +38,9 @@ export default class extends Controller {
   }
 
   list() {
+    this.saveFilters();
     this.prListTarget.innerHTML = `<img class="w-20 animate-spin" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/loader-2.png" alt="Refresh" />`;
+
     fetch("/pull_requests", {
       method: "POST",
       headers: {
@@ -87,6 +91,36 @@ export default class extends Controller {
           this.buildPRList([]);
         }
       });
+  }
+
+  loadFilters() {
+    const url = new URL(window.location.href);
+
+    const savedFilters = JSON.parse(
+      localStorage.getItem(`filters-${url.pathname}`)
+    );
+
+    if (savedFilters) {
+      if (this.hasReviewFilterTarget && savedFilters.reviewFilter) {
+        this.reviewFilterTarget.value = savedFilters.reviewFilter;
+      }
+
+      if (this.hasStateFilterTarget && savedFilters.stateFilter) {
+        this.stateFilterTarget.value = savedFilters.stateFilter;
+      }
+    }
+  }
+
+  saveFilters() {
+    const url = new URL(window.location.href);
+
+    const filters = {
+      reviewFilter: this.reviewFilterTarget.value,
+
+      stateFilter: this.stateFilterTarget.value,
+    };
+
+    localStorage.setItem(`filters-${url.pathname}`, JSON.stringify(filters));
   }
 
   showEmptyState() {
