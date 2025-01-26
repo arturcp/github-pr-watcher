@@ -75,8 +75,15 @@ export default class extends Controller {
           });
         } else if (!data) {
           this.showEmptyState();
+          this.updateTabBadge(0);
         } else {
           this.buildPRList(data);
+
+          // Calculate unreviewed PRs and update the tab badge
+          const unreviewedPRs = data.filter(
+            (pr) => !this.groupConfig.reviewed?.includes(pr.url)
+          );
+          this.updateTabBadge(unreviewedPRs.length);
         }
       })
       .catch((error) => {
@@ -89,6 +96,7 @@ export default class extends Controller {
         } else {
           console.error("Error fetching pull requests:", error);
           this.buildPRList([]);
+          this.updateTabBadge(0);
         }
       });
   }
@@ -127,6 +135,15 @@ export default class extends Controller {
     this.emptyStateTarget.classList.remove("hidden");
     this.filtersTarget.classList.add("hidden");
     this.headerTarget.classList.add("hidden");
+  }
+
+  updateTabBadge(count) {
+    const baseTitle = "GitHub PR Watcher";
+    if (count > 0) {
+      document.title = `(${count}) ${baseTitle}`;
+    } else {
+      document.title = baseTitle;
+    }
   }
 
   buildPRList(pullRequests) {
