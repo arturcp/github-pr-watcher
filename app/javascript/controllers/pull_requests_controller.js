@@ -160,13 +160,17 @@ export default class extends Controller {
 
     filteredPRs.forEach((pr) => {
       const isChecked = this.groupConfig.reviewed?.includes(pr.url) || false;
+      const isFavorited =
+        this.groupConfig.favorites?.find(
+          (pullRequest) => pullRequest.url === pr.url
+        ) !== undefined;
       const { elapsedTime, colorClass } = this.calculateTimeElapsed(
         pr.created_at
       );
       currentUrls.add(pr.url);
 
       const listItem = document.createElement("li");
-      listItem.className = `flex items-start gap-4 p-4 rounded-lg shadow-sm border border-gray-200 my-1 ${
+      listItem.className = `flex items-start gap-4 p-4 rounded-lg shadow-sm border border-gray-200 my-1 mr-2 relative ${
         isChecked ? "bg-gray-100" : "bg-white"
       }`;
 
@@ -176,7 +180,11 @@ export default class extends Controller {
                  data-url="${pr.url}"
                  ${isChecked ? "checked" : ""} />
         <div>
-          <p class="text-lg font-semibold text-gray-800">${pr.title}</p>
+          <p class="text-lg font-semibold text-gray-800">
+            <a href="${pr.url}" target="_blank" class="hover:underline">${
+        pr.title
+      }</a>
+          </p>
           <p class="text-sm text-gray-500">
             <span class="text-indigo-500">${
               pr.repository
@@ -184,6 +192,17 @@ export default class extends Controller {
             <span class="${colorClass}">(${elapsedTime})</span>
           </p>
         </div>
+        <button class="heart-button p-2 rounded-full hover:bg-gray-100 transition-colors top-4 right-4 absolute"
+                data-action="click->favorites#toggleFavorite"
+                data-url="${pr.url}"
+                data-title="${pr.title}"
+                data-repository="${pr.repository}"
+                data-author="${pr.author}"
+                data-created-at="${pr.created_at}">
+          <img class="w-6 h-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/${
+            isFavorited ? "filled" : "outline"
+          }/heart.png" alt="Favorite" />
+        </button>
       `;
 
       this.prListTarget.appendChild(listItem);
