@@ -109,6 +109,10 @@ export default class extends Controller {
   }
 
   toggleFavorite(event) {
+    if (!this.groupConfig.favorites) {
+      this.groupConfig.favorites = [];
+    }
+
     const url = event.currentTarget.dataset.url;
     const pr = this.groupConfig.favorites.find(
       (pullRequest) => pullRequest.url === url
@@ -116,10 +120,6 @@ export default class extends Controller {
 
     const isFavorited = pr !== undefined;
     const img = event.currentTarget.querySelector("img");
-
-    if (!this.groupConfig.favorites) {
-      this.groupConfig.favorites = [];
-    }
 
     if (isFavorited) {
       this.groupConfig.favorites = this.groupConfig.favorites.filter(
