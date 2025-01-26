@@ -61,8 +61,6 @@ module Github
         }
       GRAPHQL
 
-      puts "Query: #{query}"
-
       response = connection.post do |req|
         req.body = JSON.generate({ query: query })
       end
@@ -81,7 +79,7 @@ module Github
         errors = data["errors"]
         errors.each do |error|
           puts "Error: #{error['message']}"
-        end
+        end if errors
       end
     end
 

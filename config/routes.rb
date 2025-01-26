@@ -11,5 +11,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  get "/:slug", to: "pr_groups#show", as: "show"
   post "/pull_requests", to: "pull_requests#index", as: "pull_requests"
 end

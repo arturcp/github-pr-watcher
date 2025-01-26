@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Github Pr Watcher" %></title>
+    <title><%= content_for(:title) || "Github PR Watcher" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -20,12 +20,81 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap"', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
+  <body class="m-0 p-0 h-screen bg-slate-50 flex flex-col">
+    <main class="px-4 flex-grow">
+      <div data-controller="modal form">
+        <div class="flex h-full mt-4 border-b">
+          <div class="w-96 border-r-2 px-4">
+            <h2 class="font-['Black_Ops_One'] text-4xl">
+              <a href="/">
+                PR Watcher
+              </a>
+            </h2>
+            <div class="flex flex-col mt-8 h-[calc(100vh-192px)] overflow-auto" data-controller="menu">
+              <div class="pb-4">
+                <div class="bg-slate-900 text-white py-2 text-center cursor-pointer" data-action="click->modal#open click->form#load">
+                  Add new group
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ml-8 w-full overflow-auto h-[calc(100vh-90px)]">
+            <%= yield %>
+          </div>
+        </div>
+
+        <%= render "shared/modal" %>
+      </div>
     </main>
+
+    <footer class="bg-white text-slate-900 py-4 h-[70px] flex items-center justify-between px-4" data-controller="settings">
+      <!-- Left Section: GitHub Handle Input -->
+      <div class="flex items-center">
+        <label for="github-handle" class="mr-2 text-sm font-medium">GitHub Handle:</label>
+        <input
+          type="text"
+          id="github-handle"
+          class="border rounded-lg px-2 py-1 text-sm"
+          placeholder="Enter your handle"
+          data-settings-target="githubHandleInput"
+          data-action="input->settings#saveGithubHandle"
+        />
+      </div>
+
+      <!-- Center Section: Copyright Text -->
+      <div class="flex-1 text-center">
+        &copy; <%= Time.now.year %> Github PR Watcher. All rights reserved.
+      </div>
+
+      <!-- Right Section: Auto Refresh Switch -->
+      <div class="flex items-center">
+        <div class="flex flex-col items-center justify-center mr-4">
+          <span class="text-sm">Auto refresh</span>
+          <span class="text-xs text-gray-500">(20 minutes)</span>
+        </div>
+
+        <label for="toggle-switch" class="relative flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            id="toggle-switch"
+            class="sr-only peer"
+            data-action="change->settings#toggleAutoRefresh"
+            data-settings-target="toggleSwitch"
+          />
+          <!-- Switch Track -->
+          <div class="w-14 h-8 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer-checked:bg-slate-900 transition-colors"></div>
+          <!-- Switch Handle -->
+          <div class="absolute w-6 h-6 bg-white border rounded-full left-1 top-1 peer-checked:translate-x-6 peer-checked:border-blue-500 border-gray-300 transition-transform"></div>
+        </label>
+      </div>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>
 </html>
