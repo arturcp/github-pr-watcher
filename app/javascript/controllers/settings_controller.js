@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["toggleSwitch"];
+  static targets = ["githubHandleInput", "toggleSwitch"];
   static AUTO_REFRESH_INTERVAL = 300000;
 
   connect() {
@@ -11,6 +11,28 @@ export default class extends Controller {
     // If auto-refresh is enabled, start the interval
     if (autoRefresh) {
       this.startAutoRefresh();
+    }
+
+    const githubHandle = localStorage.getItem("githubHandle") || "";
+    if (this.hasGithubHandleInputTarget) {
+      this.githubHandleInputTarget.value = githubHandle;
+    }
+  }
+
+  saveGithubHandle(event) {
+    const githubHandle = event.target.value.trim();
+    localStorage.setItem("githubHandle", githubHandle);
+  }
+
+  startAutoRefresh() {
+    this.refreshInterval = setInterval(() => {
+      location.reload();
+    }, this.constructor.AUTO_REFRESH_INTERVAL);
+  }
+
+  stopAutoRefresh() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
     }
   }
 
@@ -23,18 +45,6 @@ export default class extends Controller {
       this.startAutoRefresh();
     } else {
       this.stopAutoRefresh();
-    }
-  }
-
-  startAutoRefresh() {
-    this.refreshInterval = setInterval(() => {
-      location.reload();
-    }, this.constructor.AUTO_REFRESH_INTERVAL);
-  }
-
-  stopAutoRefresh() {
-    if (this.refreshInterval) {
-      clearInterval(this.refreshInterval);
     }
   }
 }

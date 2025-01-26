@@ -53,22 +53,43 @@
     </main>
 
     <footer class="bg-white text-slate-900 py-4 h-[70px] flex items-center justify-between px-4" data-controller="settings">
-      <div class="flex-1 text-center">&copy; <%= Time.now.year %> Github PR Watcher. All rights reserved.</div>
-      <div class="ml-auto">
-        <span class="mr-4">Auto refresh</div>
-        <div class="flex items-center justify-center  bg-gray-100">
-          <label for="toggle-switch" class="relative flex items-center cursor-pointer">
-            <!-- Hidden Checkbox -->
-            <input type="checkbox" id="toggle-switch" class="sr-only peer" data-action="change->settings#toggleAutoRefresh" data-settings-target="toggleSwitch" />
-            <!-- Switch Track -->
-            <div class="w-14 h-8 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer-checked:bg-slate-900 transition-colors"></div>
-            <!-- Switch Handle -->
-            <div class="absolute w-6 h-6 bg-white border rounded-full left-1 top-1 peer-checked:translate-x-6 peer-checked:border-blue-500 border-gray-300 transition-transform"></div>
-          </label>
-        </div>
+      <!-- Left Section: GitHub Handle Input -->
+      <div class="flex items-center">
+        <label for="github-handle" class="mr-2 text-sm font-medium">GitHub Handle:</label>
+        <input
+          type="text"
+          id="github-handle"
+          class="border rounded-lg px-2 py-1 text-sm"
+          placeholder="Enter your handle"
+          data-settings-target="githubHandleInput"
+          data-action="input->settings#saveGithubHandle"
+        />
+      </div>
 
+      <!-- Center Section: Copyright Text -->
+      <div class="flex-1 text-center">
+        &copy; <%= Time.now.year %> Github PR Watcher. All rights reserved.
+      </div>
+
+      <!-- Right Section: Auto Refresh Switch -->
+      <div class="flex items-center">
+        <span class="mr-4 text-sm">Auto refresh</span>
+        <label for="toggle-switch" class="relative flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            id="toggle-switch"
+            class="sr-only peer"
+            data-action="change->settings#toggleAutoRefresh"
+            data-settings-target="toggleSwitch"
+          />
+          <!-- Switch Track -->
+          <div class="w-14 h-8 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer-checked:bg-slate-900 transition-colors"></div>
+          <!-- Switch Handle -->
+          <div class="absolute w-6 h-6 bg-white border rounded-full left-1 top-1 peer-checked:translate-x-6 peer-checked:border-blue-500 border-gray-300 transition-transform"></div>
+        </label>
       </div>
     </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </body>

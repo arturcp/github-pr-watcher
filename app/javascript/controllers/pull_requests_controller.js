@@ -196,7 +196,7 @@ export default class extends Controller {
   applyFilters(pullRequests) {
     const reviewFilter = this.reviewFilterTarget.value;
     const stateFilter = this.stateFilterTarget.value;
-    const currentUser = "arturcp";
+    const currentUser = localStorage.getItem("githubHandle") || "";
 
     return pullRequests.filter((pr) => {
       const isReviewed = this.groupConfig.reviewed?.includes(pr.url);
