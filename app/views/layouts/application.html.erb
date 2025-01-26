@@ -52,14 +52,14 @@
       </div>
     </main>
 
-    <footer class="bg-white text-slate-900 py-4 h-[70px] flex items-center justify-between px-4">
+    <footer class="bg-white text-slate-900 py-4 h-[70px] flex items-center justify-between px-4" data-controller="settings">
       <div class="flex-1 text-center">&copy; <%= Time.now.year %> Github PR Watcher. All rights reserved.</div>
       <div class="ml-auto">
         <span class="mr-4">Auto refresh</div>
         <div class="flex items-center justify-center  bg-gray-100">
           <label for="toggle-switch" class="relative flex items-center cursor-pointer">
             <!-- Hidden Checkbox -->
-            <input type="checkbox" id="toggle-switch" class="sr-only peer" />
+            <input type="checkbox" id="toggle-switch" class="sr-only peer" data-action="change->settings#toggleAutoRefresh" data-settings-target="toggleSwitch" />
             <!-- Switch Track -->
             <div class="w-14 h-8 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-400 rounded-full peer-checked:bg-slate-900 transition-colors"></div>
             <!-- Switch Handle -->
