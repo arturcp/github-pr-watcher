@@ -50,6 +50,7 @@ export default class extends Controller {
         authors: this.groupConfig.authors.join(","),
         organization: this.groupConfig.organization,
         token: this.groupConfig.token,
+        group: this.slug,
       }),
     })
       .then((response) => {

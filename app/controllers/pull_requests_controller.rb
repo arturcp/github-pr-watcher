@@ -3,7 +3,11 @@ class PullRequestsController < ApplicationController
 
   def index
     if authors.present?
-      render json: client.open_pull_requests
+      pull_requests = Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+        client.open_pull_requests
+      end
+
+      render json: pull_requests
     else
       head :unprocessable_entity
     end
@@ -25,5 +29,13 @@ class PullRequestsController < ApplicationController
 
   def token
     params[:token] || []
+  end
+
+  def group
+    params[:group].to_s
+  end
+
+  def cache_key
+    group ? "#{group}_pull_requests" : "pull_requests_#{authors}_#{organization}"
   end
 end
