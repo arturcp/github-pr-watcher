@@ -36,6 +36,6 @@ class PullRequestsController < ApplicationController
   end
 
   def cache_key
-    group ? "#{group}_pull_requests" : "pull_requests_#{authors}_#{organization}"
+    "#{group}_pull_requests_#{authors}_#{organization}_#{token.last(7)}"
   end
 end

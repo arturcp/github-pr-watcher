@@ -13,6 +13,18 @@ export default class extends Controller {
   ];
 
   connect() {
+    window.addEventListener("group-config:changed", this.initialize.bind(this));
+    this.initialize();
+  }
+
+  disconnect() {
+    window.removeEventListener(
+      "group-config:changed",
+      this.initialize.bind(this)
+    );
+  }
+
+  initialize() {
     const url = new URL(window.location.href);
     const slug = url.pathname.split("/").pop();
     this.config = new Config();
@@ -25,11 +37,8 @@ export default class extends Controller {
     }
 
     this.titleTarget.innerHTML = groupConfig.name;
-
     this.groupConfig = groupConfig;
-
     this.loadFilters();
-
     this.list();
   }
 

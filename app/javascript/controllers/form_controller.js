@@ -116,7 +116,7 @@ export default class extends Controller {
     window.dispatchEvent(event);
   }
 
-  selectGroup(group, token) {
+  selectGroup(token) {
     this.tokenTarget.value = token;
     this.groupsListTarget.classList.add("hidden");
   }
@@ -138,9 +138,7 @@ export default class extends Controller {
       const li = document.createElement("li");
       li.textContent = group;
       li.classList.add("cursor-pointer", "hover:bg-gray-100", "p-2", "text-sm");
-      li.addEventListener("click", () =>
-        this.selectGroup(group, config[group].token)
-      );
+      li.addEventListener("click", () => this.selectGroup(config[group].token));
       listElement.appendChild(li);
     });
 
