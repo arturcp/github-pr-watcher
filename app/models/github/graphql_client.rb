@@ -34,8 +34,15 @@ module Github
                   repository {
                     nameWithOwner
                   }
-                  reviews {
-                    totalCount
+                  reviews(first: 100) {
+                    edges {
+                      node {
+                        author {
+                          login
+                        }
+                        state
+                      }
+                    }
                   }
                   reviewRequests(first: 100) {
                     edges {
@@ -69,7 +76,6 @@ module Github
 
       if data["data"]
         search_result = data["data"]["search"]
-        issue_count = search_result["issueCount"]
         edges = search_result["edges"]
 
         edges.map do |edge|

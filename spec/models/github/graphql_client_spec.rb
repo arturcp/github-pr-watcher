@@ -31,7 +31,6 @@ RSpec.describe Github::GraphqlClient do
                   title: "Test PR",
                   isDraft: false,
                   repository: { nameWithOwner: "my-org/repo" },
-                  reviews: { totalCount: 2 },
                   reviewRequests: {
                     edges: [
                       {
@@ -41,6 +40,34 @@ RSpec.describe Github::GraphqlClient do
                       }
                     ]
                   },
+                  reviews: {
+                    edges: [
+                      {
+                        node: {
+                          author: {
+                              login: "user1"
+                          },
+                          state: "DISMISSED"
+                        }
+                      },
+                      {
+                        node: {
+                          author: {
+                              login: "user1"
+                          },
+                          state: "APPROVED"
+                        }
+                      },
+                      {
+                        node: {
+                          author: {
+                              login: "user2"
+                          },
+                          state: "COMMENTED"
+                        }
+                      }
+                    ]
+                },
                   createdAt: "2023-01-01T00:00:00Z",
                   mergedAt: nil,
                   url: "https://github.com/my-org/repo/pull/1"
