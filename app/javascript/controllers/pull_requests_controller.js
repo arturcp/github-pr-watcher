@@ -25,9 +25,16 @@ export default class extends Controller {
   }
 
   initialize() {
+    this.config = new Config();
+    this.loadGroupConfig();
+    this.titleTarget.innerHTML = this.groupConfig.name;
+    this.loadFilters();
+    this.list();
+  }
+
+  loadGroupConfig() {
     const url = new URL(window.location.href);
     const slug = url.pathname.split("/").pop();
-    this.config = new Config();
     const groupConfig = this.config.getConfig(slug);
 
     if (!groupConfig) {
@@ -36,10 +43,7 @@ export default class extends Controller {
       return;
     }
 
-    this.titleTarget.innerHTML = groupConfig.name;
     this.groupConfig = groupConfig;
-    this.loadFilters();
-    this.list();
   }
 
   hideEmptyState() {
@@ -87,6 +91,10 @@ export default class extends Controller {
           this.showEmptyState();
           this.updateTabBadge(0);
         } else {
+          // Cleanup: Remove URLs from groupConfig.reviewed that are no longer in the list of PRs
+          const currentUrls = new Set(data.map((pr) => pr.url));
+          this.cleanupGroupConfig(currentUrls);
+
           this.buildPRList(data);
 
           // Calculate unreviewed PRs and update the tab badge
@@ -166,10 +174,9 @@ export default class extends Controller {
       return;
     }
 
-    const currentUrls = new Set();
-
     filteredPRs.forEach((pr) => {
-      const isChecked = this.groupConfig.reviewed?.includes(pr.url) || false;
+      const isApproved = this.isPrApproved(pr);
+      const isChecked = this.groupConfig.reviewed?.includes(pr.url);
       const isFavorited =
         this.groupConfig.favorites?.find(
           (pullRequest) => pullRequest.url === pr.url
@@ -177,49 +184,94 @@ export default class extends Controller {
       const { elapsedTime, colorClass } = this.calculateTimeElapsed(
         pr.created_at
       );
-      currentUrls.add(pr.url);
 
+      const bgColor = this.prItemBgColor(pr);
       const listItem = document.createElement("li");
-      listItem.className = `flex items-start gap-4 p-4 rounded-lg shadow-sm border border-gray-200 my-1 mr-2 relative ${
-        isChecked ? "bg-gray-100" : "bg-white"
-      }`;
+      listItem.className = `flex items-start gap-4 p-4 rounded-lg shadow-sm border border-gray-200 my-1 mr-2 relative ${bgColor}`;
 
-      listItem.innerHTML = `
-        <input type="checkbox" class="w-5 h-5 rounded focus:ring-2 focus:ring-indigo-300 accent-slate-900"
-                 data-action="change->pull-requests#togglePullRequest"
-                 data-url="${pr.url}"
-                 ${isChecked ? "checked" : ""} />
-        <div>
-          <p class="text-lg font-semibold text-gray-800">
-            <a href="${pr.url}" target="_blank" class="hover:underline">${
-        pr.title
-      }</a>
-          </p>
-          <p class="text-sm text-gray-500">
-            <span class="text-indigo-500">${
-              pr.repository
-            }</span> • Opened by <span class="font-medium">${pr.author}</span>
-            <span class="${colorClass}">(${elapsedTime})</span>
-          </p>
-        </div>
-        <button class="heart-button p-2 rounded-full hover:bg-gray-100 transition-colors top-4 right-4 absolute"
-                data-action="click->favorites#toggleFavorite"
-                data-url="${pr.url}"
-                data-title="${pr.title}"
-                data-repository="${pr.repository}"
-                data-author="${pr.author}"
-                data-created-at="${pr.created_at}">
+      const checkbox = `<input type="checkbox" class="w-5 h-5 rounded focus:ring-2 focus:ring-indigo-300 accent-slate-900 ${
+        isApproved ? "hidden" : ""
+      }" data-action="change->pull-requests#togglePullRequest" data-url="${
+        pr.url
+      }" ${isChecked ? "checked" : ""} />`;
+
+      const approvedMark = `<img class="w-6 h-6 ${
+        isApproved ? "" : "hidden"
+      }" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/check.png" alt="Approved" />`;
+
+      const prTitle = `<a href="${pr.url}" target="_blank" class="hover:underline">${pr.title}</a>`;
+
+      const commentsAndApprovals = `<div class="flex gap-1 mr-4 items-center float-left bg-gray-100 px-2 rounded-md">
+        <img class="w-4 h-4" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/filled/message.png" alt="Comments" />
+        <span class="text-sm">${pr.comments}</span>
+        <span class="ml-1 text-gray-300">|</span>
+        <img class="w-4 h-4" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/outline/check.png" alt="Approvals" />
+        <span class="text-sm ${
+          pr.approvals >= 2 ? "text-green-600" : "text-red-500"
+        }">${pr.approvals}</span>
+      </div>`;
+
+      const repositoryAndAuthor = `<div class="float-left">
+          <span class="text-indigo-500">${pr.repository}</span> • Opened by <span class="font-medium">${pr.author}</span>
+          <span class="${colorClass}">(${elapsedTime})</span>
+         </div>`;
+
+      const favoriteButton = `<button class="heart-button p-2 rounded-full hover:bg-gray-100 transition-colors top-4 right-4 absolute"
+            data-action="click->favorites#toggleFavorite"
+            data-url="${pr.url}"
+            data-title="${pr.title}"
+            data-repository="${pr.repository}"
+            data-author="${pr.author}"
+            data-created-at="${pr.created_at}">
           <img class="w-6 h-6" src="https://unpkg.com/@tabler/icons-png@3.29.0/icons/${
             isFavorited ? "filled" : "outline"
           }/heart.png" alt="Favorite" />
-        </button>
+        </button>`;
+
+      listItem.innerHTML = `
+        ${checkbox}
+        ${approvedMark}
+        <div>
+          <p class="text-lg font-semibold text-gray-800">
+            ${prTitle}
+          </p>
+          <p class="text-sm text-gray-500">
+            ${commentsAndApprovals}
+            ${repositoryAndAuthor}
+          </p>
+        </div>
+        ${favoriteButton}
       `;
 
       this.prListTarget.appendChild(listItem);
     });
+  }
 
-    // Cleanup: Remove URLs from groupConfig.reviewed that are no longer in the list of PRs
-    this.cleanupGroupConfig(currentUrls);
+  prItemBgColor(pr) {
+    const isApproved = this.isPrApproved(pr);
+    const isChecked = this.groupConfig.reviewed?.includes(pr.url) || isApproved;
+    const bgColor = isApproved
+      ? "bg-green-50"
+      : isChecked
+      ? "bg-gray-100"
+      : "bg-white";
+
+    return bgColor;
+  }
+
+  isPrApproved(pr) {
+    const currentUser = localStorage.getItem("githubHandle") || "";
+    const currentUserApproval =
+      currentUser !== ""
+        ? pr.reviews.find(
+            (r) => r.author === currentUser && r.state === "APPROVED"
+          )
+        : null;
+
+    const isApproved =
+      currentUserApproval !== null && currentUserApproval !== undefined;
+
+    return isApproved;
   }
 
   applyFilters(pullRequests) {
@@ -229,12 +281,15 @@ export default class extends Controller {
 
     return pullRequests.filter((pr) => {
       const isReviewed = this.groupConfig.reviewed?.includes(pr.url);
+      const isApproved = this.isPrApproved(pr);
       const requiresMyReview = pr.reviewers.includes(currentUser);
 
       const stateMatches =
         stateFilter === "all" ||
-        (stateFilter === "reviewed" && isReviewed) ||
-        (stateFilter === "not-reviewed" && !isReviewed);
+        (stateFilter === "reviewed" && (isReviewed || isApproved)) ||
+        (stateFilter === "not-reviewed" && !isReviewed && !isApproved) ||
+        (stateFilter === "approved" && isApproved) ||
+        (stateFilter === "not-approved" && !isApproved);
 
       const reviewMatches =
         reviewFilter === "all" ||
@@ -253,6 +308,7 @@ export default class extends Controller {
   togglePullRequest(event) {
     const checkbox = event.target;
     const prUrl = checkbox.dataset.url;
+    checkbox.parentElement.classList.remove("bg-green-50");
 
     if (checkbox.checked) {
       if (!this.groupConfig.reviewed) {
@@ -264,11 +320,13 @@ export default class extends Controller {
       }
 
       checkbox.parentElement.classList.add("bg-gray-100");
+      checkbox.parentElement.classList.remove("bg-white");
     } else {
       const index = this.groupConfig.reviewed?.indexOf(prUrl);
       if (index !== -1) {
         this.groupConfig.reviewed.splice(index, 1);
         checkbox.parentElement.classList.remove("bg-gray-100");
+        checkbox.parentElement.classList.add("bg-white");
       }
     }
 
