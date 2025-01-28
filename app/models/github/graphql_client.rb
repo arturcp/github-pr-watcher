@@ -78,7 +78,7 @@ module Github
       else
         errors = data["errors"]
         errors.each do |error|
-          puts "Error: #{error['message']}"
+          puts "Error: #{error["message"]}"
         end if errors
       end
     end
