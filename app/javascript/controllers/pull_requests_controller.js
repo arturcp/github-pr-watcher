@@ -7,6 +7,7 @@ export default class extends Controller {
     "filters",
     "header",
     "prList",
+    "prTypeFilter",
     "reviewFilter",
     "stateFilter",
     "title",
@@ -134,6 +135,10 @@ export default class extends Controller {
       if (this.hasStateFilterTarget && savedFilters.stateFilter) {
         this.stateFilterTarget.value = savedFilters.stateFilter;
       }
+
+      if (this.hasPrTypeFilterTarget && savedFilters.prTypeFilter) {
+        this.prTypeFilterTarget.value = savedFilters.prTypeFilter;
+      }
     }
   }
 
@@ -144,6 +149,8 @@ export default class extends Controller {
       reviewFilter: this.reviewFilterTarget.value,
 
       stateFilter: this.stateFilterTarget.value,
+
+      prTypeFilter: this.prTypeFilterTarget.value,
     };
 
     localStorage.setItem(`filters-${url.pathname}`, JSON.stringify(filters));
@@ -186,8 +193,11 @@ export default class extends Controller {
       );
 
       const bgColor = this.prItemBgColor(pr);
+      const draftClasses = `border-2 border-dashed border-slate-300 after:content-['Draft'] after:absolute after:top-1/2 after:right-20 after:-translate-y-1/2 after:text-3xl after:font-bold after:text-gray-200 after:pointer-events-none after:z-10`;
       const listItem = document.createElement("li");
-      listItem.className = `flex items-start gap-4 p-4 rounded-lg shadow-sm border border-gray-200 my-1 mr-2 relative ${bgColor}`;
+      listItem.className = `flex items-start gap-4 p-4 rounded-lg shadow-sm ${
+        pr.is_draft ? draftClasses : "border"
+      } border-gray-200 my-1 mr-2 relative ${bgColor}`;
 
       const checkbox = `<input type="checkbox" class="w-5 h-5 rounded focus:ring-2 focus:ring-indigo-300 accent-slate-900 ${
         isApproved ? "hidden" : ""
@@ -277,6 +287,7 @@ export default class extends Controller {
   applyFilters(pullRequests) {
     const reviewFilter = this.reviewFilterTarget.value;
     const stateFilter = this.stateFilterTarget.value;
+    const prTypeFilter = this.prTypeFilterTarget.value;
     const currentUser = localStorage.getItem("githubHandle") || "";
 
     return pullRequests.filter((pr) => {
@@ -295,7 +306,12 @@ export default class extends Controller {
         reviewFilter === "all" ||
         (reviewFilter === "my-review" && requiresMyReview);
 
-      return stateMatches && reviewMatches;
+      const prTypeMatches =
+        prTypeFilter === "all" ||
+        (prTypeFilter === "drafts" && pr.is_draft) ||
+        (prTypeFilter === "not-drafts" && !pr.is_draft);
+
+      return stateMatches && reviewMatches && prTypeMatches;
     });
   }
 
