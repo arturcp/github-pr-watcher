@@ -9,7 +9,6 @@ require "action_view/railtie"
 
 # Optional components - uncomment if needed
 # require "active_model/railtie"
-# require "active_job/railtie"
 
 # require "rails/test_unit/railtie"
 

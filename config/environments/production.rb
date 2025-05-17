@@ -47,9 +47,6 @@ Rails.application.configure do
   # config.cache_store = :solid_cache_store
   config.cache_store = :memory_store
 
-  # Configure Active Job
-  # config.active_job.queue_adapter = :async
-
   # Email configuration (if needed in the future)
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
