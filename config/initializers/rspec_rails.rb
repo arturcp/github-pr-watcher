@@ -1,6 +1,6 @@
 # Disable previews in test environment
 if Rails.env.test?
-  Rails.application.config.action_controller.show_previews = false
+  # Rails.application.config.action_controller.show_previews = false
 
   # Disable view rendering in tests
   config = Rails.application.config
