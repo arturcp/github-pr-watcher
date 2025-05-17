@@ -48,7 +48,7 @@ Rails.application.configure do
   config.cache_store = :memory_store
 
   # Configure Active Job
-  config.active_job.queue_adapter = :async
+  # config.active_job.queue_adapter = :async
 
   # Email configuration (if needed in the future)
 
