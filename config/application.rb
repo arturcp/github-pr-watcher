@@ -23,7 +23,7 @@ module GithubPrWatcher
     config.load_defaults 8.0
 
     # API-only mode
-    config.api_only = true
+    config.api_only = false
 
     # Autoload paths
     config.autoload_lib(ignore: %w[assets tasks])
